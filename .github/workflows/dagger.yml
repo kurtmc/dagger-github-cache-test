@@ -1,0 +1,61 @@
+name: dagger
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+jobs:
+  build:
+    name: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: dagger call build
+        uses: dagger/dagger-for-github@v8.3.0
+        with:
+          version: "latest"
+          verb: call
+          args: build --source=.
+          cloud-token: ${{ secrets.DAGGER_CLOUD_TOKEN }}
+
+  container:
+    name: container
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: dagger call container
+        uses: dagger/dagger-for-github@v8.3.0
+        with:
+          version: "latest"
+          verb: call
+          args: container --source=.
+          cloud-token: ${{ secrets.DAGGER_CLOUD_TOKEN }}
+
+  publish:
+    name: publish
+    runs-on: ubuntu-latest
+    needs: [build, container]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: log in to ghcr
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: dagger call publish
+        uses: dagger/dagger-for-github@v8.3.0
+        with:
+          version: "latest"
+          verb: call
+          args: publish --source=. --address=ghcr.io/${{ github.repository }}:${{ github.sha }}
+          cloud-token: ${{ secrets.DAGGER_CLOUD_TOKEN }}
