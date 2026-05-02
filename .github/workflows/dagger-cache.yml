@@ -9,7 +9,7 @@ on:
       dagger-version:
         description: "Dagger version to install (e.g. v0.19.10 or latest)"
         required: false
-        default: "v0.19.10"
+        default: "v0.20.6"
 
 jobs:
   build:
