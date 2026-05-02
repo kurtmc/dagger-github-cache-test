@@ -1,0 +1,6 @@
+# Dagger export artifacts
+/server
+/image.tar
+
+# Local Go build output
+/dagger-github-cache-test
