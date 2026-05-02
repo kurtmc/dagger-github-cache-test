@@ -1,0 +1,45 @@
+name: dagger-cache
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      dagger-version:
+        description: "Dagger version to install (e.g. v0.19.10 or latest)"
+        required: false
+        default: "v0.19.10"
+
+jobs:
+  build:
+    name: build (cached engine)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: dagger call build (with engine cache)
+        uses: kurtmc/dagger-for-github@v8.4.1-engine-cache.0
+        with:
+          version: ${{ inputs.dagger-version || 'v0.19.10' }}
+          verb: call
+          args: build --source=.
+          cache-engine: "true"
+          cache-engine-key: dagger-engine-${{ hashFiles('go.sum', 'dagger.json') }}
+          cloud-token: ${{ secrets.DAGGER_CLOUD_TOKEN }}
+
+  container:
+    name: container (cached engine)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: dagger call container (with engine cache)
+        uses: kurtmc/dagger-for-github@v8.4.1-engine-cache.0
+        with:
+          version: ${{ inputs.dagger-version || 'v0.19.10' }}
+          verb: call
+          args: container --source=.
+          cache-engine: "true"
+          cache-engine-key: dagger-engine-${{ hashFiles('go.sum', 'dagger.json') }}
+          cloud-token: ${{ secrets.DAGGER_CLOUD_TOKEN }}
