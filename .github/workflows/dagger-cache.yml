@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       dagger-version:
-        description: "Dagger version to install (e.g. v0.19.10 or latest)"
+        description: "Dagger version to install (e.g. v0.20.6 or latest)"
         required: false
         default: "v0.20.6"
 
@@ -21,7 +21,7 @@ jobs:
       - name: dagger call build (with engine cache)
         uses: kurtmc/dagger-for-github@v8.4.1-engine-cache.0
         with:
-          version: ${{ inputs.dagger-version || 'v0.19.10' }}
+          version: ${{ inputs.dagger-version || 'v0.20.6' }}
           verb: call
           args: build --source=.
           cache-engine: "true"
@@ -37,7 +37,7 @@ jobs:
       - name: dagger call container (with engine cache)
         uses: kurtmc/dagger-for-github@v8.4.1-engine-cache.0
         with:
-          version: ${{ inputs.dagger-version || 'v0.19.10' }}
+          version: ${{ inputs.dagger-version || 'v0.20.6' }}
           verb: call
           args: container --source=.
           cache-engine: "true"
