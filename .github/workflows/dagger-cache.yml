@@ -16,7 +16,7 @@ jobs:
     name: build (cached engine)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: dagger call build (with engine cache)
         uses: kurtmc/dagger-for-github@v8.4.1-engine-cache.0
@@ -32,7 +32,7 @@ jobs:
     name: container (cached engine)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: dagger call container (with engine cache)
         uses: kurtmc/dagger-for-github@v8.4.1-engine-cache.0
